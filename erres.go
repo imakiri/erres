@@ -1,102 +1,78 @@
 package erres
 
 import (
-	"strings"
-	"time"
+	"bytes"
+	"text/template"
 )
 
-type Error string
+const errorTemplate = "[{{ .Time}}] {{ .Err}} | root{{range .Routs}}.{{.}}{{end}} | description{{range .Desc}}:{{.}}{{end}}"
 
-const (
-	InvalidArgument      Error = "invalid argument"
-	ConnectionError      Error = "connection error"
-	NotSupported         Error = "not supported"
-	ClosedChannel        Error = "closed channel"
-	TypeMismatch         Error = "type mismatch"
-	AccessDenied         Error = "access denied"
-	NotFound             Error = "not found"
-	AlreadyExist         Error = "already exist"
-	InternalServiceError Error = "internal service error"
-	SerializationError   Error = "serialization error"
-	DeserializationError Error = "deserialization error"
-	JustError            Error = "error"
-)
+func init() {
+	var err error
 
-const error_template = "[(time)] (error message) (trace).(trace):(description):(description)"
-
-var o_Format = "2006-01-02 15:04:05"
-
-func SetDefaultFormat(format string) {
-	o_Format = format
+	FormatError, err = template.New("error").Parse(errorTemplate)
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
-func Compare(err error, base error) bool {
-	switch {
-	case err == nil && base == nil:
-		return true
-	case err != nil && base != nil:
-		return strings.Contains(err.Error(), base.Error())
-	default:
-		return false
-	}
+var FormatError *template.Template
+
+type Error struct {
+	err   err
+	time  string
+	routs []string
+	desc  []string
 }
 
 func (e Error) Error() string {
-	var es = string(e)
-
-	es = trimTrace(es)
-	es = trimDescription(es)
-
-	return es
-}
-
-func (e Error) SetTime(format string) Error {
-	var t string
-
-	if format == "" {
-		t = time.Now().Format(o_Format)
-	} else {
-		t = time.Now().Format(format)
+	var b = new(bytes.Buffer)
+	var err = FormatError.Execute(b, e.ext())
+	if err != nil {
+		return err.Error()
 	}
-	t = "[" + t + "] "
 
-	return Error(t + string(e))
+	return b.String()
 }
 
-func (e Error) SetRoute(s string) Error {
-	var es = string(e)
-
-	if strings.HasSuffix(es, ".") {
-		return Error(es + s + ".")
-	} else {
-		return Error(es + " " + s + ".")
-	}
+func (e Error) AddRoute(route string) Error {
+	e.routs = append(e.routs, route)
+	return e
 }
 
-func (e Error) SetDescription(s string) Error {
-	var es = string(e)
+func (e Error) AddDescription(description string) Error {
+	e.desc = append(e.desc, description)
+	return e
+}
 
-	es = trimTrace(es)
-
-	if strings.HasSuffix(es, ":") {
-		return Error(es + s + ":")
-	} else {
-		return Error(es + " " + s + ":")
+func (e Error) ext() struct {
+	Err   err
+	Time  string
+	Routs []string
+	Desc  []string
+} {
+	return struct {
+		Err   err
+		Time  string
+		Routs []string
+		Desc  []string
+	}{
+		Err:   e.err,
+		Time:  e.time,
+		Routs: e.routs,
+		Desc:  e.desc,
 	}
 }
 
-func trimTrace(s string) string {
-	if strings.HasSuffix(s, ".") {
-		return strings.TrimSuffix(s, ".")
-	} else {
-		return s
+func Compare(err error, base err) bool {
+	var e, ok = err.(Error)
+	if !ok {
+		return false
 	}
-}
 
-func trimDescription(s string) string {
-	if strings.HasSuffix(s, ":") {
-		return strings.TrimSuffix(s, ":")
-	} else {
-		return s
+	if e.err == base {
+		return true
 	}
+
+	return false
 }

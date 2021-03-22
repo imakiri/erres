@@ -1,8 +1,11 @@
-VERSION 2.0
+VERSION 1.1
 PROJECT erres
-SCHEMA main /!C(?<commit>\d+)(?: !R(?<release>\d+))?:(?<notes>[\s\S]+?)(?=\s!|$)/g
+SCHEMA main /!V(?<release>\d+)(?:\.(?<commit>\d+))(?<noteList>[\s\S]+?)(?=\s!|$)/g
 SCHEMA main.notes /--([\s\S]+?)(?=\s--|$)/g
 DATA
 
-!C1:
+!V2.0:
+    --New version
+
+!V1.0:
     --Initial commit, extracted from gorum 34.17
