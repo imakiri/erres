@@ -4,6 +4,12 @@ SCHEMA main /!V(?<release>\d+)(?:\.(?<commit>\d+))(?<noteList>[\s\S]+?)(?=\s!|$)
 SCHEMA main.notes /--([\s\S]+?)(?=\s--|$)/g
 DATA
 
+!V3.0:
+    --New version
+    --Now you can link Errors thus creating linked list of Errors
+    and then iterate over it in for loop calling IsRoot() to check is it root Error
+     and Last() to shift pointer to previous Error
+
 !V2.0:
     --New version
 
