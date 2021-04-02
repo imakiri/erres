@@ -14,7 +14,8 @@ const (
 	InternalServiceError ce = "internal service error"
 	InvalidArgument      ce = "invalid argument"
 	NilArgument          ce = "nil argument"
-	FileError            ce = "file error"
+	NilReturnValue       ce = "nil return value"
+	InvalidReturnValue   ce = "invalid return value"
 	ConnectionError      ce = "connection error"
 	NotSupported         ce = "not supported"
 	ClosedChannel        ce = "closed channel"
@@ -22,6 +23,7 @@ const (
 	AccessDenied         ce = "access denied"
 	NotFound             ce = "not found"
 	AlreadyExist         ce = "already exist"
+	FileError            ce = "file error"
 	SerializationError   ce = "serialization error"
 	DeserializationError ce = "deserialization error"
 	JustError            ce = "error"
@@ -31,18 +33,18 @@ func (i CE) Error() string {
 	return string(i)
 }
 
-func (i CE) Extend() *Error {
-	return &Error{ce: i, time: time.Now().UnixNano(), fname: funcName()}
+func (i CE) Extend(skip int) *Error {
+	return &Error{ce: i, time: time.Now().UnixNano(), fname: funcName(skip)}
 }
 
 // Extend and link ce to method receiver and return extended receiver
-func (i CE) ExtendAndLink(err *Error) *Error {
-	return &Error{last: err, ce: i, time: time.Now().UnixNano(), fname: funcName()}
+func (i CE) ExtendAndLink(skip int, err *Error) *Error {
+	return &Error{last: err, ce: i, time: time.Now().UnixNano(), fname: funcName(skip)}
 }
 
-func funcName() string {
+func funcName(i int) string {
 	pc := make([]uintptr, 15)
-	n := runtime.Callers(3, pc)
+	n := runtime.Callers(3+i, pc)
 	frames := runtime.CallersFrames(pc[:n])
 	frame, _ := frames.Next()
 	return frame.Function
