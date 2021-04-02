@@ -33,11 +33,12 @@ func (i CE) Error() string {
 	return string(i)
 }
 
+// Skip value tells how many func calls to skip before getting caller name
 func (i CE) Extend(skip int) *Error {
 	return &Error{ce: i, time: time.Now().UnixNano(), fname: funcName(skip)}
 }
 
-// Extend and link ce to method receiver and return extended receiver
+// Extend method receiver, link it to err and return extended receiver
 func (i CE) ExtendAndLink(skip int, err *Error) *Error {
 	return &Error{last: err, ce: i, time: time.Now().UnixNano(), fname: funcName(skip)}
 }

@@ -54,9 +54,9 @@ func (e *Error) Last() {
 	*e = *e.last
 }
 
-// Extend and link ce to method receiver and return pointer to an extended ce
+// Extend and link err to method receiver and return pointer to an extended err
 func (e *Error) Link(err CE) *Error {
-	return err.ExtendAndLink(e)
+	return err.ExtendAndLink(0, e)
 }
 
 func (e *Error) SetName(name string) *Error {
