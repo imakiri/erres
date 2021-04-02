@@ -4,6 +4,9 @@ SCHEMA main /!V(?<release>\d+)(?:\.(?<commit>\d+))(?<noteList>[\s\S]+?)(?=\s!|$)
 SCHEMA main.notes /--([\s\S]+?)(?=\s--|$)/g
 DATA
 
+!V3.3:
+    --Deleted go.mod
+
 !V3.2:
     --Extend now request skip int - how many callers to skip
 
