@@ -11,22 +11,24 @@ type ce = Consterror
 type CE = Consterror
 
 const (
-	InternalServiceError ce = "internal service error"
-	InvalidArgument      ce = "invalid argument"
-	NilArgument          ce = "nil argument"
-	NilReturnValue       ce = "nil return value"
-	InvalidReturnValue   ce = "invalid return value"
-	ConnectionError      ce = "connection error"
-	NotSupported         ce = "not supported"
-	ClosedChannel        ce = "closed channel"
-	TypeMismatch         ce = "type mismatch"
-	AccessDenied         ce = "access denied"
-	NotFound             ce = "not found"
-	AlreadyExist         ce = "already exist"
-	FileError            ce = "file error"
-	SerializationError   ce = "serialization error"
-	DeserializationError ce = "deserialization error"
-	JustError            ce = "error"
+	USOE                            = UnacceptableStateOfExecution
+	UnacceptableStateOfExecution ce = "unacceptable state of execution"
+	InternalServiceError         ce = "internal service error"
+	InvalidArgument              ce = "invalid argument"
+	NilArgument                  ce = "nil argument"
+	NilReturnValue               ce = "nil return value"
+	InvalidReturnValue           ce = "invalid return value"
+	ConnectionError              ce = "connection error"
+	NotSupported                 ce = "not supported"
+	ClosedChannel                ce = "closed channel"
+	TypeMismatch                 ce = "type mismatch"
+	AccessDenied                 ce = "access denied"
+	NotFound                     ce = "not found"
+	AlreadyExist                 ce = "already exist"
+	FileError                    ce = "file error"
+	SerializationError           ce = "serialization error"
+	DeserializationError         ce = "deserialization error"
+	JustError                    ce = "error"
 )
 
 func (i CE) Error() string {
