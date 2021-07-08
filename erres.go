@@ -4,25 +4,25 @@ import (
 	"text/template"
 )
 
-const errorTemplate = "[{{ .Time}}] {{ .Err}} | {{ .Fname}}.{{ .Ename}} | {{ .Desc}}"
+const rawErrorTemplate = "[{{ .Time}}] {{ .Error}} | {{ .Function}}.{{ .Name}} | {{ .Description}}"
 
 func init() {
 	var err error
 
-	fError, err = template.New("error").Parse(errorTemplate)
+	errorTemplate, err = template.New("error").Parse(rawErrorTemplate)
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
-var fError *template.Template
-var fTime = "2006-01-02 15:04:05"
+var errorTemplate *template.Template
+var timeFormat = "2006-01-02 15:04:05"
 
 func SetErrorFormat(t *template.Template) error {
 	if t == nil {
 		return NilArgument
 	} else {
-		fError = t
+		errorTemplate = t
 		return nil
 	}
 }
@@ -31,7 +31,7 @@ func SetTimeFormat(f string) error {
 	if f == "" {
 		return InvalidArgument
 	} else {
-		fTime = f
+		timeFormat = f
 		return nil
 	}
 }
