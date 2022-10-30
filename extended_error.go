@@ -14,7 +14,7 @@ type extendedError struct {
 	description string
 }
 
-func (e extendedError) String() string {
+func (e extendedError) Error() string {
 	var b = new(bytes.Buffer)
 	var es = struct {
 		Error       string
@@ -36,10 +36,6 @@ func (e extendedError) String() string {
 	}
 
 	return b.String()
-}
-
-func (e extendedError) Error() string {
-	return string(e.error)
 }
 
 func (e extendedError) Copy() *extendedError {

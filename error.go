@@ -12,11 +12,15 @@ const (
 	UnacceptableStateOfExecution Error = "unacceptable state of execution"
 	InternalServiceError         Error = "internal service error"
 	InvalidArgument              Error = "invalid argument"
+	InvalidMethod                Error = "invalid method"
 	NilArgument                  Error = "nil argument"
 	NilReturnValue               Error = "nil return value"
 	InvalidReturnValue           Error = "invalid return value"
+	InvalidReturnType            Error = "invalid return type"
 	ConnectionError              Error = "connection error"
 	NotSupported                 Error = "not supported"
+	Overdue                      Error = "overdue"
+	Expired                      Error = "expired"
 	ClosedChannel                Error = "closed channel"
 	TypeMismatch                 Error = "type mismatch"
 	AccessDenied                 Error = "access denied"
@@ -27,6 +31,7 @@ const (
 	DeserializationError         Error = "deserialization error"
 	ExternalError                Error = "external error"
 	JustError                    Error = "error"
+	UnknownError                 Error = "unknown error"
 )
 
 func (e Error) Error() string {
